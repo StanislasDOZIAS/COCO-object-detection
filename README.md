@@ -1,5 +1,5 @@
 # COCO-object-detection
-Object Detection with the COCO dataset (2014) using YOLO and DETR method.
+Object Detection with the COCO dataset (2017    ) using YOLO and DETR method.
 
 ## Coco dataset
 
@@ -26,3 +26,8 @@ COCO Dataset is used with FiftyOne framework (see [here](`https://cocodataset.or
 - [GitHub](https://github.com/facebookresearch/detr)
 
 - [demo collab](https://colab.research.google.com/github/facebookresearch/detr/blob/colab/notebooks/detr_demo.ipynb#scrollTo=h91rsIPl7tVl)
+
+
+## YOLOv6
+
+- [GitHub](https://github.com/meituan/YOLOv6)
