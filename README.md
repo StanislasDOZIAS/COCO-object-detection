@@ -28,6 +28,6 @@ COCO Dataset is used with FiftyOne framework (see [here](`https://cocodataset.or
 - [demo collab](https://colab.research.google.com/github/facebookresearch/detr/blob/colab/notebooks/detr_demo.ipynb#scrollTo=h91rsIPl7tVl)
 
 
-## YOLOv6
+## YOLOv6   
 
 - [GitHub](https://github.com/meituan/YOLOv6)
