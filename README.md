@@ -1,10 +1,9 @@
 # COCO-object-detection
-Object Detection with the COCO dataset (2017    ) using YOLO and DETR method.
+Object Detection with the COCO dataset (2017) using YOLO and DETR method.
 
 ## Coco dataset
 
 - [Evolution of the COCO dataset](https://paperswithcode.com/dataset/coco)
-- I downloaded the 2014 dataset, we will see if we "need" the 2017 one.
 
 ## FiftyOne
 

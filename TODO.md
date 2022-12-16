@@ -25,6 +25,6 @@
 
 ## TOUS LES DEUX :
 - Télécharger COCO 2017
-- récupérer modèle+ et faire inférence sur dataset_animaux, puis filtrer les objets que l'on veut pas
+- récupérer modèle + et faire inférence sur dataset_animaux, puis filtrer les objets que l'on veut pas
 - entrainer (si possible) modèle_animaux
 - voire si on peut connecter ca avec fyftyone
