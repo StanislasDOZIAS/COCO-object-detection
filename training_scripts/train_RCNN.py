@@ -10,13 +10,15 @@ import torch
 import torchvision
 from torchvision.models.detection.faster_rcnn import FastRCNNPredictor
 
-model_type = "RCNN"
+model_type = "faster_RCNN"
 
 
 def train(args):
 
     if not os.path.isdir("results/" + model_type + "/"):
         os.makedirs("results/" + model_type + "/")
+
+    wandb.init(project="Object Detection", name=model_type + "/" + args.wanted_classes)
 
     train_loader, test_loader, num_classes = build_dataloaders(args.wanted_classes)
 
