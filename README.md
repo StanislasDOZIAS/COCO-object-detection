@@ -9,7 +9,7 @@ python -m training_scripts.train_RCNN -h
 
 ## Notebooks
 
-There are at the root for import problems purpose (and all begining with `notebook_`).
+There are at the root for import problems purpose (and all begining with `notebook`).
 
 ## Requirements
 
