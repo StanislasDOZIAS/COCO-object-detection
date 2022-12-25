@@ -1,10 +1,10 @@
 # COCO-object-detection
 Object Detection with the COCO dataset (2017) using YOLO and DETR method.
 
-## Lauch a training script (for RCNN)
+## Lauch a training script (for faster_RCNN)
 
 ```
-python -m training_scripts.train_RCNN -h
+python -m training_scripts.train_faster_RCNN -h
 ```
 
 ## Notebooks

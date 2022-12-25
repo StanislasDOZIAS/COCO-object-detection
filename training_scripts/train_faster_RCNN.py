@@ -18,7 +18,17 @@ def train(args):
     if not os.path.isdir("results/" + model_type + "/"):
         os.makedirs("results/" + model_type + "/")
 
-    wandb.init(project="Object Detection", name=model_type + "/" + args.wanted_classes)
+    if args.wandb_run_id is not None:
+        wandb.init(
+            project="Object Detection",
+            name=model_type + "/" + args.wanted_classes,
+            id=args.wandb_run_id,
+            resume="must",
+        )
+    else:
+        wandb.init(
+            project="Object Detection", name=model_type + "/" + args.wanted_classes
+        )
 
     train_loader, test_loader, num_classes = build_dataloaders(args.wanted_classes)
 
@@ -30,15 +40,16 @@ def train(args):
     # replace the pre-trained head with a new one
     model.roi_heads.box_predictor = FastRCNNPredictor(in_features, num_classes)
 
+    if args.init_save_path is not None:
+        print("loading weights from", args.init_save_path)
+        model.load_state_dict(torch.load(args.init_save_path))
+
     # train on the GPU or on the CPU, if a GPU is not available
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
     print("Using device %s" % device)
 
     # move model to the right device
     model.to(device)
-
-    if args.init_save_path is not None:
-        model.load_state_dict(torch.load(args.init_save_path))
 
     # construct an optimizer
     params = [p for p in model.parameters() if p.requires_grad]
@@ -83,6 +94,13 @@ if __name__ == "__main__":
         "--wandb",
         action="store_true",
         help="Whether to use wandb or not.",
+    )
+
+    parser.add_argument(
+        "--wandb_run_id",
+        type=str,
+        default=None,
+        help="Run id to append logs to a previous wandb run",
     )
 
     parser.add_argument(
