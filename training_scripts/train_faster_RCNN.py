@@ -99,7 +99,6 @@ def train(args):
 
         # evaluate on the test dataset
         test_metric = evaluate(model, test_loader, device=device)
-        test_coco_eval = test_metric.coco_eval["bbox"]
 
         # for the wandb logs, we take the mean Average Precision : Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ]
         to_log["main/mAP"] = test_metric.coco_eval["bbox"].stats[0]
