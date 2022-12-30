@@ -61,6 +61,11 @@ def train(args):
     # replace the pre-trained head with a new one
     model.roi_heads.box_predictor = FastRCNNPredictor(in_features, num_classes)
 
+    # get the trained weights
+    if args.init_save_path is not None:
+        print("loading weights from", args.init_save_path)
+        model.load_state_dict(torch.load(args.init_save_path))
+
     # construct an optimizer
     params = [p for p in model.parameters() if p.requires_grad]
     optimizer = torch.optim.SGD(params, lr=args.lr, momentum=0.9, weight_decay=0.0005)
@@ -68,10 +73,6 @@ def train(args):
     # train on the GPU or on the CPU, if a GPU is not available
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
     print("Using device %s" % device)
-
-    if args.init_save_path is not None:
-        print("loading weights from", args.init_save_path)
-        model.load_state_dict(torch.load(args.init_save_path))
 
     # move model to the right device
     model.to(device)
@@ -94,7 +95,8 @@ def train(args):
             device,
             epoch,
             print_freq=1000,
-            wanted_losses=["loss_classifier", "loss_box_reg"],
+            # wanted_losses=["loss_classifier", "loss_box_reg"],
+            wanted_losses=None,
         )
 
         # evaluate on the test dataset

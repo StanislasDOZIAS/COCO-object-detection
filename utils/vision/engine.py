@@ -8,6 +8,7 @@ import torchvision.models.detection.mask_rcnn
 from utils.vision.coco_utils import get_coco_api_from_dataset
 from utils.vision.coco_eval import CocoEvaluator
 from utils.vision import utils
+from utils.dataset.dataset import CLASSES
 
 
 def train_one_epoch(
@@ -73,7 +74,7 @@ def _get_iou_types(model):
 
 
 @torch.no_grad()
-def evaluate(model, data_loader, device):
+def evaluate(model, data_loader, device, map_output=False, output_classes=None):
     n_threads = torch.get_num_threads()
     # FIXME remove this and make paste_masks_in_image run on the GPU
     torch.set_num_threads(1)
@@ -92,6 +93,18 @@ def evaluate(model, data_loader, device):
         torch.cuda.synchronize()
         model_time = time.time()
         outputs = model(images)
+
+        if map_output:
+            for num_image, output in enumerate(outputs):
+                processed_output = output.copy()
+                for i, label in enumerate(processed_output["labels"]):
+                    if CLASSES[label] in output_classes:
+                        processed_output["labels"][i] = output_classes.index(
+                            CLASSES[label]
+                        )
+                    else:
+                        processed_output["labels"][i] = 0
+                outputs[num_image] = processed_output
 
         outputs = [{k: v.to(cpu_device) for k, v in t.items()} for t in outputs]
         model_time = time.time() - model_time

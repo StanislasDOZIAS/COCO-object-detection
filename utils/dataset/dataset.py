@@ -20,28 +20,29 @@ def get_transform(train):
     return T.Compose(transforms)
 
 
-def build_dataloaders(wanted_classes: str, batch_size: int = 1):
-    fo_train_set = create_fiftyone_dataset(
-        wanted_classes, "train", drop_existing_dataset=False
-    )
+def build_dataloaders(wanted_classes: str, batch_size: int = 1, only_test=False):
+    if not only_test:
+        fo_train_set = create_fiftyone_dataset(
+            wanted_classes, "train", drop_existing_dataset=False
+        )
+        fo_train_set.compute_metadata()
+        train_set = FiftyOneTorchDataset(fo_train_set, get_transform(train=True))
+
+        train_loader = torch.utils.data.DataLoader(
+            train_set,
+            batch_size=batch_size,
+            shuffle=True,
+            num_workers=0,
+            collate_fn=utils.collate_fn,
+        )
+
     fo_test_set = create_fiftyone_dataset(
         wanted_classes, "validation", drop_existing_dataset=False
     )
-
-    fo_train_set.compute_metadata()
     fo_test_set.compute_metadata()
 
-    train_set = FiftyOneTorchDataset(fo_train_set, get_transform(train=True))
     test_set = FiftyOneTorchDataset(fo_test_set, get_transform(train=False))
-    num_classes = len(train_set.classes)
-
-    train_loader = torch.utils.data.DataLoader(
-        train_set,
-        batch_size=batch_size,
-        shuffle=True,
-        num_workers=0,
-        collate_fn=utils.collate_fn,
-    )
+    num_classes = len(test_set.classes)
     test_loader = torch.utils.data.DataLoader(
         test_set,
         batch_size=batch_size,
@@ -50,8 +51,10 @@ def build_dataloaders(wanted_classes: str, batch_size: int = 1):
         collate_fn=utils.collate_fn,
     )
 
-    return train_loader, test_loader, num_classes
+    if only_test:
+        return test_loader, num_classes
 
+    return train_loader, test_loader, num_classes
 
 
 class FiftyOneTorchDataset(torch.utils.data.Dataset):
@@ -236,3 +239,100 @@ class_filter = {
         "person",
     ],
 }
+
+
+
+# COCO classes
+CLASSES = [
+    "N/A",
+    "person",
+    "bicycle",
+    "car",
+    "motorcycle",
+    "airplane",
+    "bus",
+    "train",
+    "truck",
+    "boat",
+    "traffic light",
+    "fire hydrant",
+    "N/A",
+    "stop sign",
+    "parking meter",
+    "bench",
+    "bird",
+    "cat",
+    "dog",
+    "horse",
+    "sheep",
+    "cow",
+    "elephant",
+    "bear",
+    "zebra",
+    "giraffe",
+    "N/A",
+    "backpack",
+    "umbrella",
+    "N/A",
+    "N/A",
+    "handbag",
+    "tie",
+    "suitcase",
+    "frisbee",
+    "skis",
+    "snowboard",
+    "sports ball",
+    "kite",
+    "baseball bat",
+    "baseball glove",
+    "skateboard",
+    "surfboard",
+    "tennis racket",
+    "bottle",
+    "N/A",
+    "wine glass",
+    "cup",
+    "fork",
+    "knife",
+    "spoon",
+    "bowl",
+    "banana",
+    "apple",
+    "sandwich",
+    "orange",
+    "broccoli",
+    "carrot",
+    "hot dog",
+    "pizza",
+    "donut",
+    "cake",
+    "chair",
+    "couch",
+    "potted plant",
+    "bed",
+    "N/A",
+    "dining table",
+    "N/A",
+    "N/A",
+    "toilet",
+    "N/A",
+    "tv",
+    "laptop",
+    "mouse",
+    "remote",
+    "keyboard",
+    "cell phone",
+    "microwave",
+    "oven",
+    "toaster",
+    "sink",
+    "refrigerator",
+    "N/A",
+    "book",
+    "clock",
+    "vase",
+    "scissors",
+    "teddy bear",
+    "hair drier",
+    "toothbrush",
+]
